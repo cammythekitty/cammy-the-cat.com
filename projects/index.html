@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cammy · projects</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        /* ── projects page layout ── */
+        .projects-page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 60px 24px 80px;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            animation: heroIn .8s cubic-bezier(.16,1,.3,1) both;
+        }
+
+        .projects-header { display: flex; flex-direction: column; gap: 6px; }
+
+        .projects-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(48px, 10vw, 80px);
+            line-height: .9;
+            letter-spacing: -.02em;
+            color: var(--accent);
+        }
+
+        /* ── project grid ── */
+        .proj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+        }
+
+        /* ── project card (extends .card from style.css) ── */
+        .pcard {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: default;
+            transition: border-color .2s, transform .2s;
+            animation: cardIn .6s cubic-bezier(.16,1,.3,1) both;
+        }
+        .pcard:hover { border-color: #2a3550; transform: translateY(-2px); }
+        .pcard:nth-child(1) { animation-delay: .1s; }
+        .pcard:nth-child(2) { animation-delay: .18s; }
+        .pcard:nth-child(3) { animation-delay: .26s; }
+        .pcard:nth-child(4) { animation-delay: .34s; }
+        .pcard:nth-child(5) { animation-delay: .42s; }
+
+        /* accent line */
+        .pcard::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 2px;
+            border-radius: 6px 0 0 6px;
+            opacity: .7;
+        }
+        .pcard.accent-indigo::before  { background: var(--accent2); }
+        .pcard.accent-green::before   { background: #4ade80; }
+        .pcard.accent-purple::before  { background: #c084fc; }
+        .pcard.accent-yellow::before  { background: #fbbf24; }
+        .pcard.accent-ghost::before   { background: var(--muted); }
+
+        /* glow on hover */
+        .pcard-glow {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s;
+        }
+        .pcard.accent-indigo .pcard-glow  { background: radial-gradient(ellipse at left center, rgba(99,102,241,.07), transparent 60%); }
+        .pcard.accent-green .pcard-glow   { background: radial-gradient(ellipse at left center, rgba(74,222,128,.06), transparent 60%); }
+        .pcard.accent-purple .pcard-glow  { background: radial-gradient(ellipse at left center, rgba(192,132,252,.06), transparent 60%); }
+        .pcard.accent-yellow .pcard-glow  { background: radial-gradient(ellipse at left center, rgba(251,191,36,.05), transparent 60%); }
+        .pcard:hover .pcard-glow { opacity: 1; }
+
+        /* featured card spans full width, side-by-side layout */
+        .pcard.featured {
+            grid-column: 1 / -1;
+            flex-direction: row;
+        }
+
+        /* ── preview pane ── */
+        .pcard-preview {
+            background: #05070f;
+            position: relative;
+            overflow: hidden;
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .featured .pcard-preview {
+            width: 400px;
+            min-height: 260px;
+            border-right: 1px solid var(--border);
+        }
+
+        /* scaled-down iframe of Seraph */
+        .seraph-iframe-wrap {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+        .seraph-iframe-wrap iframe {
+            width: 167%;
+            height: 167%;
+            transform: scale(0.6);
+            transform-origin: top left;
+            border: none;
+            pointer-events: none;
+        }
+        .preview-fade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent 60%, #05070f 100%);
+            z-index: 2;
+        }
+        .featured .preview-fade {
+            background: linear-gradient(to bottom, transparent 70%, #05070f 100%);
+        }
+
+        /* icon placeholder for non-iframe cards */
+        .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 2rem;
+            width: 100%;
+        }
+        .preview-icon { font-size: 2rem; }
+        .preview-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .ptag {
+            font-size: 8px;
+            letter-spacing: .1em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            color: #4a5878;
+            background: #0d1120;
+        }
+        .ptag.i { color: var(--accent); border-color: rgba(99,102,241,.25); background: rgba(99,102,241,.08); }
+        .ptag.g { color: #4ade80; border-color: rgba(74,222,128,.2); background: rgba(74,222,128,.06); }
+        .ptag.p { color: #c084fc; border-color: rgba(192,132,252,.2); background: rgba(192,132,252,.06); }
+        .ptag.y { color: #fbbf24; border-color: rgba(251,191,36,.2); background: rgba(251,191,36,.06); }
+
+        /* ── card body ── */
+        .pcard-body {
+            padding: 18px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .pcard-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color .2s;
+        }
+        .pcard:hover .pcard-name { color: var(--accent); }
+
+        .live-dot {
+            display: inline-block;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            flex-shrink: 0;
+            animation: blink 2.5s infinite;
+        }
+        @keyframes blink {
+            0%,100% { opacity: 1; }
+            50% { opacity: .35; }
+        }
+
+        .pcard-badge {
+            font-size: 8px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--accent2);
+            border: 1px solid rgba(99,102,241,.3);
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-weight: 400;
+        }
+
+        .pcard-desc {
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.6;
+            flex: 1;
+        }
+        .pcard-desc code {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            background: rgba(99,102,241,.1);
+            color: var(--accent);
+            padding: 1px 5px;
+            border-radius: 3px;
+            border: 1px solid rgba(99,102,241,.18);
+        }
+
+        .pcard-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 2px;
+        }
+
+        .pcard-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 6px;
+        }
+        .pbtn {
+            font-size: 9px;
+            letter-spacing: .1em;
+            padding: 5px 13px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            transition: all .15s;
+        }
+        .pbtn:hover { border-color: #2a3550; color: var(--text); }
+        .pbtn.primary {
+            background: rgba(99,102,241,.1);
+            border-color: rgba(99,102,241,.28);
+            color: var(--accent);
+        }
+        .pbtn.primary:hover {
+            background: rgba(99,102,241,.18);
+            border-color: rgba(99,102,241,.45);
+        }
+
+        /* ── footer ── */
+        .proj-footer {
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: .1em;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 680px) {
+            .pcard.featured { flex-direction: column; }
+            .featured .pcard-preview { width: 100%; min-height: 180px; border-right: none; border-bottom: 1px solid var(--border); }
+            .preview-fade { background: linear-gradient(to bottom, transparent 70%, #05070f 100%); }
+        }
+        @media (max-width: 480px) {
+            .corner-tag { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="grid-overlay"></div>
+
+<span class="corner-tag top-left">cammy-the-cat.com</span>
+<span class="corner-tag bottom-right">EST. 2024</span>
+
+<div class="projects-page">
+
+    <div class="projects-header">
+        <a href="/" class="nav-box">← back to home</a>
+        <h1 class="projects-title">projects</h1>
+        <p style="font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-top:4px;">things i built</p>
+    </div>
+
+    <div class="proj-grid">
+
+        <!-- SeraphByte — featured with iframe preview -->
+        <div class="pcard featured accent-indigo">
+            <div class="pcard-glow"></div>
+            <div class="pcard-preview">
+                <div class="seraph-iframe-wrap">
+                    <iframe
+                        src="/projects/seraph/"
+                        title="SeraphByte live preview"
+                        sandbox="allow-scripts allow-same-origin"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+                <div class="preview-fade"></div>
+            </div>
+            <div class="pcard-body">
+                <div class="pcard-name">
+                    <span class="live-dot"></span>
+                    SeraphByte
+                    <span class="pcard-badge">featured</span>
+                </div>
+                <div class="pcard-desc">
+                    Local LLM runner with a Rust/Axum backend and a live web chat interface over WebSocket. Hot-swap models, pin memory engrams, tweak generation params in real time. Runs on your own hardware, no cloud required.
+                </div>
+                <div class="pcard-tags">
+                    <span class="tag">Rust</span>
+                    <span class="tag">Axum</span>
+                    <span class="tag">WebSocket</span>
+                    <span class="tag">GGUF</span>
+                    <span class="tag">HTML/CSS/JS</span>
+                </div>
+                <div class="pcard-actions">
+                    <a href="/projects/seraph/" class="pbtn primary">↗ open preview</a>
+                    <a href="https://github.com/cammythekitty/Seraph" class="pbtn" target="_blank">github</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- AtlasAI -->
+        <div class="pcard accent-purple">
+            <div class="pcard-glow"></div>
+            <div class="pcard-preview">
+                <div class="preview-placeholder">
+                    <div class="preview-icon">🧠</div>
+                    <div class="preview-tags">
+                        <span class="ptag p">PySide6</span>
+                        <span class="ptag">llama-cpp</span>
+                        <span class="ptag g">desktop</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pcard-body">
+                <div class="pcard-name">AtlasAI</div>
+                <div class="pcard-desc">
+                    Python desktop GUI for hot-swappable GGUF model files. Draggable memory engrams, workspace filesystem access, and a full async chat bubble rendering engine.
+                </div>
+                <div class="pcard-tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">PySide6</span>
+                    <span class="tag">llama-cpp-python</span>
+                </div>
+                <div class="pcard-actions">
+                    <a href="https://github.com/cammythekitty/AtlasAI" class="pbtn primary" target="_blank">↗ github</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seraphine -->
+        <div class="pcard accent-indigo">
+            <div class="pcard-glow"></div>
+            <div class="pcard-preview">
+                <div class="preview-placeholder">
+                    <div class="preview-icon">🤖</div>
+                    <div class="preview-tags">
+                        <span class="ptag i">slash commands</span>
+                        <span class="ptag p">AI-powered</span>
+                        <span class="ptag g">discord</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pcard-body">
+                <div class="pcard-name">Seraphine</div>
+                <div class="pcard-desc">
+                    Discord bot powered by SeraphByte under the hood. Moderation, server utilities, ban sync — and a live connection to the Seraph engine for AI responses right in your server.
+                </div>
+                <div class="pcard-tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">discord.py</span>
+                    <span class="tag">SeraphByte API</span>
+                </div>
+                <div class="pcard-actions">
+                    <a href="/projects/discord-bot/" class="pbtn primary">↗ add to discord</a>
+                    <a href="https://github.com/cammythekitty/Seraphine" class="pbtn" target="_blank">github</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Twitch bot -->
+        <div class="pcard accent-yellow">
+            <div class="pcard-glow"></div>
+            <div class="pcard-preview">
+                <div class="preview-placeholder">
+                    <div class="preview-icon">📡</div>
+                    <div class="preview-tags">
+                        <span class="ptag y">; prefix</span>
+                        <span class="ptag y">twitch</span>
+                        <span class="ptag g">live</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pcard-body">
+                <div class="pcard-name">Twitch Bot</div>
+                <div class="pcard-desc">
+                    Custom chat bot running live on <code>cammy_the_kitty</code>. Uses <code>;</code> as command prefix to avoid conflicts. Handles commands, socials, lurk, uptime and more.
+                </div>
+                <div class="pcard-tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">TwitchIO</span>
+                </div>
+                <div class="pcard-actions">
+                    <a href="https://www.twitch.tv/cammy_the_kitty" class="pbtn primary" target="_blank">↗ twitch</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- this site -->
+        <div class="pcard accent-ghost">
+            <div class="pcard-glow"></div>
+            <div class="pcard-preview">
+                <div class="preview-placeholder">
+                    <div class="preview-icon">🐱</div>
+                    <div class="preview-tags">
+                        <span class="ptag g">you're here</span>
+                        <span class="ptag">nginx</span>
+                        <span class="ptag i">agent-ready</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pcard-body">
+                <div class="pcard-name">cammy-the-cat.com</div>
+                <div class="pcard-desc">
+                    This site. Static HTML/CSS on a Pi, served via nginx through a Cloudflare tunnel. Deployed via Discord bot. Agent-ready with robots.txt, sitemap, MCP server card and API catalog.
+                </div>
+                <div class="pcard-tags">
+                    <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag">nginx</span>
+                    <span class="tag">Raspberry Pi</span>
+                </div>
+                <div class="pcard-actions">
+                    <a href="https://github.com/cammythekitty/cammy-the-cat.com" class="pbtn primary" target="_blank">↗ github</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="proj-footer">[ cammy-the-cat.com ]</p>
+
+</div>
+
+<script>
+    // cursor glow tracking (same as main site)
+    document.addEventListener('mousemove', e => {
+        document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+        document.documentElement.style.setProperty('--my', e.clientY + 'px');
+    });
+</script>
+</body>
+</html>

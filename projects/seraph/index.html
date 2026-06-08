@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeraphByte — cammy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .showcase-page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 60px 24px 80px;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: heroIn .8s cubic-bezier(.16,1,.3,1) both;
+        }
+
+        /* ── header ── */
+        .showcase-header {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .showcase-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(48px, 10vw, 80px);
+            line-height: .9;
+            letter-spacing: -.02em;
+            color: var(--accent);
+        }
+        .showcase-sub {
+            font-size: 10px;
+            letter-spacing: .18em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* ── main split layout ── */
+        .showcase-split {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* ── left: text content ── */
+        .showcase-info {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .info-block { display: flex; flex-direction: column; gap: 10px; }
+
+        .info-label {
+            font-size: 8px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .info-desc {
+            font-size: 12px;
+            color: #8899bb;
+            line-height: 1.7;
+        }
+
+        /* feature list */
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 11px;
+            color: #8899bb;
+            line-height: 1.5;
+            transition: border-color .2s;
+        }
+        .feature-item:hover { border-color: #2a3550; }
+        .feature-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .feature-text strong {
+            display: block;
+            font-size: 11px;
+            color: var(--text);
+            margin-bottom: 2px;
+            letter-spacing: .04em;
+        }
+
+        /* stack tags */
+        .stack-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        /* action buttons */
+        .action-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .abtn {
+            font-size: 9px;
+            letter-spacing: .12em;
+            padding: 8px 18px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            transition: all .15s;
+        }
+        .abtn:hover { border-color: #2a3550; color: var(--text); }
+        .abtn.primary {
+            background: rgba(99,102,241,.1);
+            border-color: rgba(99,102,241,.3);
+            color: var(--accent);
+        }
+        .abtn.primary:hover {
+            background: rgba(99,102,241,.2);
+            border-color: rgba(99,102,241,.5);
+        }
+
+        /* ── right: Seraph UI preview ── */
+        .showcase-preview {
+            position: sticky;
+            top: 24px;
+            background: #05070f;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 480px;
+        }
+
+        /* browser chrome bar */
+        .preview-chrome {
+            background: #0c0f1e;
+            border-bottom: 1px solid var(--border);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .chrome-dots {
+            display: flex;
+            gap: 5px;
+        }
+        .chrome-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+        .chrome-dot.red    { background: #ff5f57; opacity: .6; }
+        .chrome-dot.yellow { background: #febc2e; opacity: .6; }
+        .chrome-dot.green  { background: #28c840; opacity: .6; }
+        .chrome-url {
+            flex: 1;
+            background: #131929;
+            border: 1px solid #1c2236;
+            border-radius: 4px;
+            padding: 3px 10px;
+            font-size: 9px;
+            color: #3d4a63;
+            letter-spacing: .04em;
+        }
+
+        /* iframe wrapper */
+        .preview-iframe-wrap {
+            position: relative;
+            width: 100%;
+            height: calc(100% - 37px);
+            overflow: hidden;
+        }
+        .preview-iframe-wrap iframe {
+            width: 143%;
+            height: 143%;
+            transform: scale(0.7);
+            transform-origin: top left;
+            border: none;
+            pointer-events: none;
+        }
+
+        /* fade at bottom */
+        .preview-fade {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, #05070f);
+            pointer-events: none;
+        }
+
+        /* launch button overlay */
+        .preview-launch {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        /* ── status strip ── */
+        .status-strip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 9px;
+            letter-spacing: .1em;
+            color: var(--muted);
+        }
+        .status-dot-live {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: blink 2.5s infinite;
+            flex-shrink: 0;
+        }
+        @keyframes blink {
+            0%,100% { opacity: 1; }
+            50% { opacity: .3; }
+        }
+
+        /* ── footer ── */
+        .showcase-footer {
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: .1em;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 800px) {
+            .showcase-split {
+                grid-template-columns: 1fr;
+            }
+            .showcase-preview {
+                position: static;
+                height: 340px;
+            }
+        }
+        @media (max-width: 480px) {
+            .corner-tag { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="grid-overlay"></div>
+
+<span class="corner-tag top-left">cammy-the-cat.com</span>
+<span class="corner-tag bottom-right">EST. 2024</span>
+
+<div class="showcase-page">
+
+    <div class="showcase-header">
+        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+            <a href="/projects" class="nav-box">← back to projects</a>
+        </div>
+        <h1 class="showcase-title">SeraphByte</h1>
+        <p class="showcase-sub">local llm runner · rust · websocket · gen8</p>
+    </div>
+
+    <div class="showcase-split">
+
+        <!-- left: info -->
+        <div class="showcase-info">
+
+            <div class="info-block">
+                <div class="info-label">about</div>
+                <p class="info-desc">
+                    SeraphByte is a local LLM runner built around a Rust/Axum backend and a live web chat interface over WebSocket. No cloud, no subscriptions — just your hardware, your models, running fast.
+                </p>
+                <p class="info-desc">
+                    The web UI connects directly to the engine over a persistent WebSocket, streaming tokens in real time. Hot-swap models without restarting, pin memory between sessions, and tune generation parameters on the fly.
+                </p>
+            </div>
+
+            <div class="info-block">
+                <div class="info-label">features</div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">⚡</span>
+                        <div class="feature-text">
+                            <strong>Real-time token streaming</strong>
+                            WebSocket connection streams tokens live as the model generates — no waiting for the full response.
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔄</span>
+                        <div class="feature-text">
+                            <strong>Hot model swapping</strong>
+                            Switch between GGUF models from the UI without restarting the backend.
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⬡</span>
+                        <div class="feature-text">
+                            <strong>Pinned memory</strong>
+                            Pin context across sessions so the model remembers what matters.
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">◎</span>
+                        <div class="feature-text">
+                            <strong>Generation config</strong>
+                            Tune temperature, top-p, and max tokens live from the sidebar.
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🤖</span>
+                        <div class="feature-text">
+                            <strong>Seraphine integration</strong>
+                            Powers the Seraphine Discord bot — queries flow from Discord through SeraphByte and back.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-label">stack</div>
+                <div class="stack-row">
+                    <span class="tag">Rust</span>
+                    <span class="tag">Axum</span>
+                    <span class="tag">WebSocket</span>
+                    <span class="tag">GGUF</span>
+                    <span class="tag">llama.cpp</span>
+                    <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag">JavaScript</span>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-label">links</div>
+                <div class="action-row">
+                    <a href="https://github.com/cammythekitty/SeraphByte" class="abtn primary" target="_blank">↗ view on github</a>
+                    <a href="/projects/seraph/app" class="abtn">open full ui ↗</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- right: preview -->
+        <div class="showcase-preview">
+            <div class="preview-chrome">
+                <div class="chrome-dots">
+                    <div class="chrome-dot red"></div>
+                    <div class="chrome-dot yellow"></div>
+                    <div class="chrome-dot green"></div>
+                </div>
+                <div class="chrome-url">seraph.cammy-the-cat.com</div>
+            </div>
+            <div class="preview-iframe-wrap">
+                <iframe
+                    src="/projects/seraph/app/"
+                    title="SeraphByte UI"
+                    sandbox="allow-scripts allow-same-origin"
+                    loading="lazy"
+                ></iframe>
+                <div class="preview-fade"></div>
+                <div class="preview-launch">
+                    <a href="/projects/seraph/app/" class="abtn primary">↗ open full ui</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="showcase-footer">[ cammy-the-cat.com ]</p>
+
+</div>
+
+<script>
+    document.addEventListener('mousemove', e => {
+        document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+        document.documentElement.style.setProperty('--my', e.clientY + 'px');
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# robots.txt — cammy-the-cat.com
+
+User-agent: *
+Allow: /
+Disallow: /private/
+
+# AI crawlers — allowed to index, not to train
+User-agent: GPTBot
+Allow: /
+Disallow:
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow:
+
+User-agent: Claude-Web
+Allow: /
+Disallow:
+
+User-agent: Google-Extended
+Allow: /
+Disallow:
+
+User-agent: CCBot
+Allow: /
+Disallow:
+
+User-agent: Bytespider
+Allow: /
+Disallow:
+
+# Content signals
+Content-Signal: ai-train=no, search=yes, ai-input=yes
+
+Sitemap: https://cammy-the-cat.com/sitemap.xml
