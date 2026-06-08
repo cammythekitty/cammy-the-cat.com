@@ -1,0 +1,22 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://cammy-the-cat.com/",
+      "https://www.iana.org/assignments/link-relations/service-doc": [
+        { "href": "https://github.com/cammythekitty" }
+      ]
+    },
+    {
+      "anchor": "https://github.com/cammythekitty/SeraphByte",
+      "https://www.iana.org/assignments/link-relations/service-doc": [
+        { "href": "https://github.com/cammythekitty/SeraphByte#readme" }
+      ]
+    },
+    {
+      "anchor": "https://github.com/cammythekitty/AtlasAI",
+      "https://www.iana.org/assignments/link-relations/service-doc": [
+        { "href": "https://github.com/cammythekitty/AtlasAI#readme" }
+      ]
+    }
+  ]
+}

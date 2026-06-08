@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
+  "skills": [
+    {
+      "name": "browse-site",
+      "type": "navigation",
+      "description": "Browse cammy-the-cat.com — personal site with projects and socials pages",
+      "url": "https://cammy-the-cat.com/"
+    },
+    {
+      "name": "list-projects",
+      "type": "resource",
+      "description": "Get a list of Camilla's public projects including SeraphByte and AtlasAI",
+      "url": "https://cammy-the-cat.com/projects"
+    },
+    {
+      "name": "find-socials",
+      "type": "resource",
+      "description": "Find Camilla's social links — Twitch, Discord, YouTube, GitHub",
+      "url": "https://cammy-the-cat.com/socials"
+    }
+  ]
+}
