@@ -22,6 +22,18 @@
                 <span class="name-kitty">kitty</span>
             </h2>
             <p class="tagline">developer · streamer · cat</p>
+
+            <div class="lanyard-card" id="lanyard-card">
+                <div class="lanyard-avatar-wrap">
+                    <img class="lanyard-avatar" id="lanyard-avatar" src="" alt="avatar">
+                    <span class="lanyard-status-dot" id="lanyard-status-dot"></span>
+                </div>
+                <div class="lanyard-info">
+                    <span class="lanyard-name" id="lanyard-name">camilla</span>
+                    <span class="lanyard-activity" id="lanyard-activity">...</span>
+                </div>
+            </div>
+
             <div class="cta-row">
                 <a href="/projects" class="cta">projects →</a>
             </div>
@@ -33,6 +45,67 @@
         <div class="corner-tag top-left">[ ON WORST BEHAVIOUR SINCE EST. 2024 ]</div>
         <div class="corner-tag bottom-right">[ ARCH USER / RUST PROGRAMMER ]</div>
     </main>
+
+    <script>
+        document.addEventListener('mousemove', e => {
+            document.body.style.setProperty('--mx', e.clientX + 'px');
+            document.body.style.setProperty('--my', e.clientY + 'px');
+        });
+    </script>
+
+    <script>
+        const DISCORD_ID = '1110542429838397471';
+
+        const STATUS_COLORS = {
+            online:  '#43b581',
+            idle:    '#faa61a',
+            dnd:     '#f04747',
+            offline: '#747f8d'
+        };
+
+        async function fetchLanyard() {
+            try {
+                const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+                const { data } = await res.json();
+                if (!data) return;
+
+                const { discord_user, activities, listening_to_spotify, spotify, discord_status } = data;
+
+                // avatar
+                const avatar = document.getElementById('lanyard-avatar');
+                if (discord_user.avatar) {
+                    avatar.src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${discord_user.avatar}.png?size=64`;
+                }
+
+                // status dot
+                const dot = document.getElementById('lanyard-status-dot');
+                dot.style.background = STATUS_COLORS[discord_status] || STATUS_COLORS.offline;
+                if (discord_status === 'idle') dot.style.boxShadow = `0 0 0 2px var(--bg)`;
+
+                // activity text
+                const activity = document.getElementById('lanyard-activity');
+                const customStatus = activities.find(a => a.type === 4);
+
+                if (listening_to_spotify && spotify) {
+                    activity.textContent = `listening to ${spotify.song} by ${spotify.artist}`;
+                } else {
+                    const playing = activities.find(a => a.type === 0);
+                    if (playing) {
+                        activity.textContent = `playing ${playing.name}`;
+                    } else if (customStatus?.state) {
+                        activity.textContent = customStatus.state;
+                    } else {
+                        const labels = { online: 'online', idle: 'away', dnd: 'do not disturb', offline: 'offline' };
+                        activity.textContent = labels[discord_status] || 'offline';
+                    }
+                }
+            } catch (e) {
+                document.getElementById('lanyard-card').style.display = 'none';
+            }
+        }
+
+        fetchLanyard();
+        setInterval(fetchLanyard, 30000);
     </script>
 </body>
 </html>

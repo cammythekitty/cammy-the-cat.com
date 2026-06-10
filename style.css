@@ -404,6 +404,71 @@ body::before {
 }
 
 /* ══════════════════════════════════════════════════════════ */
+/* LANYARD CARD                                               */
+/* ══════════════════════════════════════════════════════════ */
+.lanyard-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    width: fit-content;
+    margin-top: -4px;
+}
+
+.lanyard-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+}
+
+.lanyard-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: block;
+    background: var(--border);
+}
+
+.lanyard-status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 2px solid var(--surface);
+    background: #747f8d;
+}
+
+.lanyard-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.lanyard-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: .04em;
+}
+
+.lanyard-activity {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+}
+
+/* ══════════════════════════════════════════════════════════ */
 /* TWITCH WIDGET                                              */
 /* ══════════════════════════════════════════════════════════ */
 .cta-row {
