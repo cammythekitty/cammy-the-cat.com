@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-flavor="site">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cammy-the-cat</title>
+    <script src="/theme-init.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="now-playing.css">
 </head>
 <body>
     <div class="noise"></div>
@@ -23,27 +25,17 @@
             </h2>
             <p class="tagline">developer · streamer · cat</p>
 
-            <div class="lanyard-card" id="lanyard-card">
-                <div class="lanyard-avatar-wrap">
-                    <img class="lanyard-avatar" id="lanyard-avatar" src="" alt="avatar">
-                    <span class="lanyard-status-dot" id="lanyard-status-dot"></span>
-                </div>
-                <div class="lanyard-info">
-                    <span class="lanyard-name" id="lanyard-name">camilla</span>
-                    <span class="lanyard-activity" id="lanyard-activity">...</span>
-                </div>
-            </div>
-
             <div class="cta-row">
-                <a href="/projects" class="cta">projects →</a>
-            </div>
-            <div class="cta-row">
-                <a href="/socials" class="cta">find me online →</a>
-            </div>
+                    <a href="/projects" class="cta">projects →</a>
+                </div>
+                <div class="cta-row">
+                    <a href="/socials" class="cta">find me online →</a>
+                </div>
         </div>
 
         <div class="corner-tag top-left">[ ON WORST BEHAVIOUR SINCE EST. 2024 ]</div>
         <div class="corner-tag bottom-right">[ ARCH USER / RUST PROGRAMMER ]</div>
+    <div id="now-playing" data-user="1110542429838397471"></div>
     </main>
 
     <script>
@@ -52,60 +44,7 @@
             document.body.style.setProperty('--my', e.clientY + 'px');
         });
     </script>
-
-    <script>
-        const DISCORD_ID = '1110542429838397471';
-
-        const STATUS_COLORS = {
-            online:  '#43b581',
-            idle:    '#faa61a',
-            dnd:     '#f04747',
-            offline: '#747f8d'
-        };
-
-        async function fetchLanyard() {
-            try {
-                const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
-                const { data } = await res.json();
-                if (!data) return;
-
-                const { discord_user, activities, listening_to_spotify, spotify, discord_status } = data;
-
-                // avatar
-                const avatar = document.getElementById('lanyard-avatar');
-                if (discord_user.avatar) {
-                    avatar.src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${discord_user.avatar}.png?size=64`;
-                }
-
-                // status dot
-                const dot = document.getElementById('lanyard-status-dot');
-                dot.style.background = STATUS_COLORS[discord_status] || STATUS_COLORS.offline;
-                if (discord_status === 'idle') dot.style.boxShadow = `0 0 0 2px var(--bg)`;
-
-                // activity text
-                const activity = document.getElementById('lanyard-activity');
-                const customStatus = activities.find(a => a.type === 4);
-
-                if (listening_to_spotify && spotify) {
-                    activity.textContent = `listening to ${spotify.song} by ${spotify.artist}`;
-                } else {
-                    const playing = activities.find(a => a.type === 0);
-                    if (playing) {
-                        activity.textContent = `playing ${playing.name}`;
-                    } else if (customStatus?.state) {
-                        activity.textContent = customStatus.state;
-                    } else {
-                        const labels = { online: 'online', idle: 'away', dnd: 'do not disturb', offline: 'offline' };
-                        activity.textContent = labels[discord_status] || 'offline';
-                    }
-                }
-            } catch (e) {
-                document.getElementById('lanyard-card').style.display = 'none';
-            }
-        }
-
-        fetchLanyard();
-        setInterval(fetchLanyard, 30000);
-    </script>
+    <script src="now-playing.js"></script>
+    <script src="theme.js"></script>
 </body>
 </html>

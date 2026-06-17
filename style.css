@@ -1,5 +1,59 @@
 /* ─── Variables ──────────────────────────────────────────── */
+/* Light theme (default) */
 :root {
+    --bg:       #fff5f8;
+    --surface:  #ffffff;
+    --border:   #ffd6e7;
+    --text:     #2d1a24;
+    --muted:    #b08fa0;
+    --accent:   #f472b6;
+    --accent2:  #e879a0;
+    --accent3:  #fbbfda;
+    --accent-rgb:  244,114,182;
+    --accent2-rgb: 232,121,160;
+    --github-rgb:  36,41,46;
+
+    --tag-bg:        #fff0f6;
+    --tag-color:     var(--accent2);
+    --row-divider:   #fff0f6;
+    --surface-hover: #fff5f8;
+
+    --twitch:   #9147ff;
+    --discord:  #5865f2;
+    --youtube:  #ff0000;
+    --github:   #24292e;
+
+    --mx: 50vw;
+    --my: 50vh;
+}
+
+/* Dark theme — applied when the OS prefers dark and the user hasn't
+   explicitly forced "light", OR when the user explicitly picks "dark"
+   from the menu (the block below handles that case unconditionally). */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg:       #080b14;
+        --surface:  #0d1120;
+        --border:   #1a2035;
+        --text:     #c9d1e0;
+        --muted:    #3d4a63;
+        --accent:   #a5b4fc;
+        --accent2:  #6366f1;
+        --accent3:  #454f7a;
+        --accent-rgb:  165,180,252;
+        --accent2-rgb: 99,102,241;
+        --github-rgb:  230,237,243;
+
+        --tag-bg:        var(--surface);
+        --tag-color:     #4a5878;
+        --row-divider:   var(--border);
+        --surface-hover: #11162a;
+
+        --github:   #e6edf3;
+    }
+}
+
+:root[data-theme="dark"] {
     --bg:       #080b14;
     --surface:  #0d1120;
     --border:   #1a2035;
@@ -7,14 +61,17 @@
     --muted:    #3d4a63;
     --accent:   #a5b4fc;
     --accent2:  #6366f1;
+    --accent3:  #454f7a;
+    --accent-rgb:  165,180,252;
+    --accent2-rgb: 99,102,241;
+    --github-rgb:  230,237,243;
 
-    --twitch:   #9147ff;
-    --discord:  #5865f2;
-    --youtube:  #ff0000;
+    --tag-bg:        var(--surface);
+    --tag-color:     #4a5878;
+    --row-divider:   var(--border);
+    --surface-hover: #11162a;
+
     --github:   #e6edf3;
-
-    --mx: 50vw;
-    --my: 50vh;
 }
 
 /* ─── Reset ──────────────────────────────────────────────── */
@@ -36,7 +93,7 @@ a { color: inherit; text-decoration: none; }
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: .035;
+    opacity: .02;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     background-size: 128px;
 }
@@ -48,8 +105,8 @@ a { color: inherit; text-decoration: none; }
     pointer-events: none;
     z-index: 0;
     background-image:
-        linear-gradient(rgba(99,102,241,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(99,102,241,.04) 1px, transparent 1px);
+        linear-gradient(rgba(244,114,182,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,114,182,.06) 1px, transparent 1px);
     background-size: 48px 48px;
 }
 
@@ -60,7 +117,7 @@ body::before {
     width: 500px;
     height: 500px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(99,102,241,.07) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(244,114,182,.08) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
     transform: translate(-50%, -50%);
@@ -78,7 +135,7 @@ body::before {
     font-family: 'Space Mono', monospace;
     z-index: 10;
 }
-.top-left    { top: 18px; left: 20px; }
+.top-left     { top: 18px; left: 20px; }
 .bottom-right { bottom: 18px; right: 20px; }
 
 /* ══════════════════════════════════════════════════════════ */
@@ -123,7 +180,7 @@ body::before {
 }
 
 .name-cammy  { color: var(--accent); }
-.name-sep    { color: var(--accent2); opacity: .5; }
+.name-sep    { color: var(--accent3); opacity: .8; }
 .name-the    { color: var(--muted); font-size: .55em; }
 .name-kitty  { color: var(--text); }
 
@@ -155,19 +212,17 @@ body::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(99,102,241,.1), transparent);
+    background: linear-gradient(135deg, rgba(var(--accent-rgb),.08), transparent);
     opacity: 0;
     transition: opacity .2s;
 }
 .cta:hover {
     border-color: var(--accent2);
-    color: var(--accent);
+    color: var(--accent2);
     transform: translateX(4px);
 }
 .cta:hover::before { opacity: 1; }
-.cta-arrow {
-    transition: transform .2s;
-}
+.cta-arrow { transition: transform .2s; }
 .cta:hover .cta-arrow { transform: translateX(4px); }
 
 /* smaller nav variant */
@@ -188,7 +243,7 @@ body::before {
 }
 .nav-box:hover {
     border-color: var(--accent2);
-    color: var(--accent);
+    color: var(--accent2);
     transform: translateX(1px);
 }
 
@@ -271,7 +326,7 @@ body::before {
 .card[data-platform="youtube"]::before { background: var(--youtube); }
 .card[data-platform="github"]::before  { background: var(--github); }
 
-.card:hover { border-color: #2a3550; }
+.card:hover { border-color: var(--accent3); }
 
 .card-glow {
     position: absolute;
@@ -280,15 +335,15 @@ body::before {
     transition: opacity .25s;
     pointer-events: none;
 }
-.card[data-platform="twitch"]  .card-glow { background: radial-gradient(ellipse at left center, rgba(145,71,255,.08), transparent 60%); }
-.card[data-platform="discord"] .card-glow { background: radial-gradient(ellipse at left center, rgba(88,101,242,.08), transparent 60%); }
-.card[data-platform="youtube"] .card-glow { background: radial-gradient(ellipse at left center, rgba(255,0,0,.06), transparent 60%); }
-.card[data-platform="github"]  .card-glow { background: radial-gradient(ellipse at left center, rgba(230,237,243,.05), transparent 60%); }
+.card[data-platform="twitch"]  .card-glow { background: radial-gradient(ellipse at left center, rgba(145,71,255,.06), transparent 60%); }
+.card[data-platform="discord"] .card-glow { background: radial-gradient(ellipse at left center, rgba(88,101,242,.06), transparent 60%); }
+.card[data-platform="youtube"] .card-glow { background: radial-gradient(ellipse at left center, rgba(255,0,0,.05), transparent 60%); }
+.card[data-platform="github"]  .card-glow { background: radial-gradient(ellipse at left center, rgba(var(--github-rgb),.05), transparent 60%); }
 .card:hover .card-glow { opacity: 1; }
 
 .card-icon {
     flex-shrink: 0;
-    opacity: .7;
+    opacity: .65;
     transition: opacity .2s;
 }
 .card[data-platform="twitch"]  .card-icon { color: var(--twitch); }
@@ -316,7 +371,7 @@ body::before {
     text-overflow: ellipsis;
     transition: color .2s;
 }
-.card:hover .card-handle { color: var(--accent); }
+.card:hover .card-handle { color: var(--accent2); }
 
 .card-arrow {
     font-size: 18px;
@@ -360,14 +415,14 @@ body::before {
     gap: 8px;
     transition: color .2s;
 }
-.card:hover .proj-name { color: var(--accent); }
+.card:hover .proj-name { color: var(--accent2); }
 
 .proj-badge {
     font-size: 8px;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--accent2);
-    border: 1px solid rgba(99,102,241,.3);
+    border: 1px solid var(--accent3);
     border-radius: 4px;
     padding: 1px 5px;
     font-weight: 400;
@@ -388,9 +443,9 @@ body::before {
 .tag {
     font-size: 9px;
     letter-spacing: .1em;
-    color: #4a5878;
-    background: #0d1120;
-    border: 1px solid #1a2035;
+    color: var(--tag-color);
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 2px 7px;
 }
@@ -469,7 +524,7 @@ body::before {
 }
 
 /* ══════════════════════════════════════════════════════════ */
-/* TWITCH WIDGET                                              */
+/* CTA ROW                                                    */
 /* ══════════════════════════════════════════════════════════ */
 .cta-row {
     display: flex;
@@ -477,126 +532,131 @@ body::before {
     flex-wrap: wrap;
 }
 
-.twitch-widget {
+/* ══════════════════════════════════════════════════════════ */
+/* MAIN CONTENT SPLIT                                         */
+/* ══════════════════════════════════════════════════════════ */
+.main-content-split {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 16px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    text-decoration: none;
-    transition: all .2s ease;
-    overflow: hidden;
-    width: fit-content;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.left-buttons-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ─── Lanyard positioned under top-left corner tag ───────── */
+#now-playing {
     position: fixed;
-    top: 18px;
+    top: 42px;
+    left: 20px;
+    z-index: 10;
+}
+/* ══════════════════════════════════════════════════════════ */
+/* THEME TOGGLE                                               */
+/* ══════════════════════════════════════════════════════════ */
+.theme-toggle {
+    position: fixed;
+    top: 16px;
     right: 20px;
-    z-index: 100;
+    z-index: 30;
+    font-family: 'Space Mono', monospace;
 }
-.twitch-widget::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity .2s;
-}
-.twitch-widget:hover { transform: translateY(-2px); }
 
-/* offline state */
-.twitch-offline { border-color: var(--border); }
-.twitch-offline .tw-icon { color: var(--muted); }
-.twitch-offline .tw-status { color: var(--muted); }
-.twitch-offline:hover { border-color: #9147ff; }
-.twitch-offline:hover .tw-icon { color: #9147ff; }
-
-/* live state */
-.twitch-live {
-    border-color: rgba(145, 71, 255, 0.4);
-    background: rgba(145, 71, 255, 0.06);
-}
-.twitch-live::before {
-    background: radial-gradient(ellipse at left, rgba(145,71,255,.1), transparent 70%);
-    opacity: 1;
-}
-.twitch-live .tw-icon { color: #9147ff; }
-.twitch-live .tw-status { color: #bf94ff; font-weight: 700; }
-.twitch-live:hover { border-color: #9147ff; }
-
-.tw-icon { flex-shrink: 0; display: flex; align-items: center; }
-
-.tw-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-
-.tw-status {
-    font-size: 10px;
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 9px;
     letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--muted);
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color .15s, color .15s, transform .15s;
 }
-.tw-detail {
-    font-size: 12px;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 220px;
+.theme-toggle-btn:hover,
+.theme-toggle-btn[aria-expanded="true"] {
+    border-color: var(--accent2);
+    color: var(--accent);
 }
 
-.tw-live-dot {
-    display: none;
-    width: 7px;
-    height: 7px;
+.theme-toggle-dot {
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: #9147ff;
+    background: var(--accent2);
     flex-shrink: 0;
-    animation: pulseAnim 2s infinite;
 }
 
-/* ══════════════════════════════════════════════════════════ */
-/* TWITCH WIDGET — corner tag style                           */
-/* ══════════════════════════════════════════════════════════ */
-.cta-row {
+.theme-toggle-caret {
+    font-size: 8px;
+    opacity: .6;
+    transition: transform .15s;
+}
+.theme-toggle-btn[aria-expanded="true"] .theme-toggle-caret { transform: rotate(180deg); }
+
+.theme-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 132px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px;
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.22);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity .15s ease, transform .15s ease, visibility .15s;
+}
+.theme-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
-.twitch-widget {
-    position: fixed;
-    top: 12px;
-    right: 26px;
-    z-index: 100;
+.theme-option {
     display: flex;
     align-items: center;
-    gap: 7px;
-    text-decoration: none;
-    font-size: 9px;
-    letter-spacing: .18em;
-    font-family: 'Space Mono', monospace;
+    justify-content: space-between;
+    gap: 10px;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    padding: 7px 9px;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
     color: var(--muted);
-    transition: color .2s;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: background .12s, color .12s;
 }
-.twitch-widget:hover { color: #9147ff; }
+.theme-option:hover { background: var(--bg); color: var(--text); }
+.theme-option[aria-checked="true"] { color: var(--accent); }
+.theme-option-check {
+    font-size: 10px;
+    opacity: 0;
+    color: var(--accent);
+}
+.theme-option[aria-checked="true"] .theme-option-check { opacity: 1; }
 
-.tw-icon { display: flex; align-items: center; flex-shrink: 0; }
-.tw-icon svg { width: 10px; height: 10px; }
-
-.tw-body { display: flex; gap: 5px; align-items: center; }
-
-.tw-status { text-transform: uppercase; }
-.tw-detail { opacity: .7; }
-
-/* hide detail when offline to keep it minimal like the other tags */
-.twitch-offline .tw-detail { display: none; }
-.twitch-live { color: #9147ff; }
-.twitch-live .tw-detail { display: block; opacity: .8; }
-
-.tw-live-dot {
-    display: none;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #9147ff;
-    flex-shrink: 0;
-    animation: pulseAnim 2s infinite;
+@media (max-width: 480px) {
+    .theme-toggle { top: 14px; right: 14px; }
+    .theme-toggle-btn span:not(.theme-toggle-caret):not(.theme-toggle-dot) { display: none; }
+    .theme-toggle-btn { padding: 7px; }
 }
