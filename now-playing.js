@@ -75,7 +75,7 @@
           '<span class="pc-platforms" aria-hidden="true"></span>' +
         '</span>' +
         '<span class="pc-meta" hidden></span>' +
-        '<span class="pc-badges" aria-hidden="true"></span>' +
+        '<span class="pc-badges"></span>' +
       '</span>' +
       '<button class="pc-star" type="button" aria-label="show wishlist" title="wishlist">★</button>' +
     '</div>' +
@@ -201,8 +201,8 @@
     let html = "";
     for (const [bit, name, hash] of BADGE_FLAGS) {
       if (flags & bit) {
-        html += '<img class="pc-badge" src="https://cdn.discordapp.com/badge-icons/' + hash +
-          '.png" alt="' + esc(name) + '" title="' + esc(name) + '" onerror="this.remove()">';
+        html += '<img class="pc-badge" aria-hidden="true" src="https://cdn.discordapp.com/badge-icons/' + hash +
+          '.png" alt="" title="' + esc(name) + '" onerror="this.remove()">';
       }
     }
     return html;
@@ -214,11 +214,12 @@
   let lastFlags = 0;
   function renderDstnBadges() {
     return dstnBadges.map(function (b) {
+      const label = esc(b.description || b.id);
       const img = '<img class="pc-badge" src="https://cdn.discordapp.com/badge-icons/' + esc(b.icon) +
-        '.png" alt="' + esc(b.description || b.id) + '" title="' + esc(b.description || b.id) + '" onerror="this.remove()">';
+        '.png" alt="" title="' + label + '" onerror="this.remove()">';
       return b.link
-        ? '<a class="pc-badge-link" href="' + esc(b.link) + '" target="_blank" rel="noopener">' + img + "</a>"
-        : img;
+        ? '<a class="pc-badge-link" href="' + esc(b.link) + '" target="_blank" rel="noopener" aria-label="' + label + '">' + img + "</a>"
+        : '<span aria-hidden="true">' + img + "</span>";
     }).join("");
   }
   function paintBadges() {
