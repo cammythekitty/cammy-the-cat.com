@@ -552,7 +552,7 @@ body::before {
 /* ─── Lanyard positioned under top-left corner tag ───────── */
 #now-playing {
     position: fixed;
-    top: 36px;   /* sits just under the corner tag; card's own padding handles deco clearance */
+    top: 36px;
     left: 20px;
     z-index: 10;
 }

@@ -30,7 +30,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 28px 22px 14px;  /* extra top padding absorbs the 14px deco bleed */
+    padding: 38px 22px 14px;
     position: relative;
 }
 
@@ -39,6 +39,7 @@
     flex-shrink: 0;
     width: 60px;
     height: 60px;
+    overflow: visible;
 }
 
 .pc-av-img {
@@ -54,7 +55,7 @@
 
 .pc-av-deco {
     position: absolute;
-    top: -14px;
+    top: -24px;
     left: 50%;
     transform: translateX(-50%);
     width: 80px;
