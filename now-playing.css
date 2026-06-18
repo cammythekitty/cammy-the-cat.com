@@ -29,21 +29,21 @@
     overflow: visible;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 20px 10px;
+    gap: 12px;
+    padding: 28px 22px 14px;  /* extra top padding absorbs the 14px deco bleed */
     position: relative;
 }
 
 .pc-avatar {
     position: relative;
     flex-shrink: 0;
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
 }
 
 .pc-av-img {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     display: block;
     object-fit: cover;
@@ -64,16 +64,12 @@
     z-index: 2;
 }
 
-.pc-head {
-    padding-top: 20px;
-}
-
 .pc-status {
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 13px;
-    height: 13px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     border: 2px solid var(--surface);
     background: #80848e;
