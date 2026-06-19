@@ -552,7 +552,7 @@ body::before {
 /* ─── Lanyard positioned under top-left corner tag ───────── */
 #now-playing {
     position: fixed;
-    top: 36px;
+    top: 42px;
     left: 20px;
     z-index: 10;
 }
@@ -584,7 +584,7 @@ body::before {
     transition: border-color .15s, color .15s, transform .15s;
 }
 .theme-toggle-btn:hover,
-.theme-toggle-btn[aria-expanded="true"] {
+.theme-toggle-btn.is-open {
     border-color: var(--accent2);
     color: var(--accent);
 }
@@ -602,7 +602,7 @@ body::before {
     opacity: .6;
     transition: transform .15s;
 }
-.theme-toggle-btn[aria-expanded="true"] .theme-toggle-caret { transform: rotate(180deg); }
+.theme-toggle-btn.is-open .theme-toggle-caret { transform: rotate(180deg); }
 
 .theme-menu {
     position: absolute;
@@ -647,13 +647,13 @@ body::before {
     transition: background .12s, color .12s;
 }
 .theme-option:hover { background: var(--bg); color: var(--text); }
-.theme-option[aria-checked="true"] { color: var(--accent); }
+.theme-option.is-active { color: var(--accent); }
 .theme-option-check {
     font-size: 10px;
     opacity: 0;
     color: var(--accent);
 }
-.theme-option[aria-checked="true"] .theme-option-check { opacity: 1; }
+.theme-option.is-active .theme-option-check { opacity: 1; }
 
 @media (max-width: 480px) {
     .theme-toggle { top: 14px; right: 14px; }

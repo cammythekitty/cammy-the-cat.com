@@ -9,16 +9,15 @@
     var wrap = document.createElement('div');
     wrap.className = 'theme-toggle';
     wrap.innerHTML =
-        '<button type="button" class="theme-toggle-btn" id="theme-toggle-btn" ' +
-        'aria-haspopup="true" aria-expanded="false" aria-label="Change colour theme">' +
+        '<button type="button" class="theme-toggle-btn" id="theme-toggle-btn">' +
         '<span class="theme-toggle-dot"></span>' +
         '<span id="theme-toggle-label">system</span>' +
         '<span class="theme-toggle-caret">\u25BE</span>' +
         '</button>' +
-        '<div class="theme-menu" id="theme-menu" role="menu">' +
-        '<button type="button" class="theme-option" role="menuitemradio" data-theme-choice="system" aria-checked="true"><span>system</span><span class="theme-option-check">\u2713</span></button>' +
-        '<button type="button" class="theme-option" role="menuitemradio" data-theme-choice="light" aria-checked="false"><span>light</span><span class="theme-option-check">\u2713</span></button>' +
-        '<button type="button" class="theme-option" role="menuitemradio" data-theme-choice="dark" aria-checked="false"><span>dark</span><span class="theme-option-check">\u2713</span></button>' +
+        '<div class="theme-menu" id="theme-menu">' +
+        '<button type="button" class="theme-option" data-theme-choice="system"><span>system</span><span class="theme-option-check">\u2713</span></button>' +
+        '<button type="button" class="theme-option" data-theme-choice="light"><span>light</span><span class="theme-option-check">\u2713</span></button>' +
+        '<button type="button" class="theme-option" data-theme-choice="dark"><span>dark</span><span class="theme-option-check">\u2713</span></button>' +
         '</div>';
     document.body.appendChild(wrap);
 
@@ -36,7 +35,7 @@
     function reflectUI(choice) {
         label.textContent = choice;
         options.forEach(function (opt) {
-            opt.setAttribute('aria-checked', String(opt.dataset.themeChoice === choice));
+            opt.classList.toggle('is-active', opt.dataset.themeChoice === choice);
         });
     }
 
@@ -59,11 +58,11 @@
 
     function openMenu() {
         menu.classList.add('open');
-        btn.setAttribute('aria-expanded', 'true');
+        btn.classList.add('is-open');
     }
     function closeMenu() {
         menu.classList.remove('open');
-        btn.setAttribute('aria-expanded', 'false');
+        btn.classList.remove('is-open');
     }
 
     btn.addEventListener('click', function (e) {
@@ -83,6 +82,17 @@
     });
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') closeMenu();
+    });
+
+    // If this document is an iframe (or another tab) and someone changes the
+    // theme elsewhere on the same origin, localStorage updates instantly but
+    // THIS document doesn't know unless it's told — it only read localStorage
+    // once, at load time. The 'storage' event fires in every other same-origin
+    // browsing context when that happens, so listen for it and re-sync live.
+    window.addEventListener('storage', function (e) {
+        if (e.key === STORAGE_KEY) {
+            applyTheme(getStoredTheme());
+        }
     });
 
     // Actually apply the stored choice (sets data-theme + syncs the dropdown).
