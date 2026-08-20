@@ -1,4 +1,5 @@
 /* =====================================================================
+<<<<<<< HEAD
  * now-playing.js — Discord presence card, polling edition.
  *
  * Fetches from your own Lanyard-compatible REST API instead of the
@@ -17,14 +18,39 @@
  *
  * API BASE URL: set window.NOW_PLAYING_API or defaults to
  *   https://lanyard.cammy-the-cat.com
+=======
+ * now-playing.js — a single Discord-style presence card. (API edition)
+ *
+ * Base state is a compact profile pill (avatar + name + status dot).
+ * It auto-expands a row for whatever is going on, in this order:
+ *   custom status · Spotify · development · games · streaming
+ * Data comes live from Lanyard over a websocket. Album art drives the
+ * card's accent colour.
+ *
+ * WHICH USER?  The Discord user id is resolved, in priority order, from:
+ *   1. the path        /api/<id>
+ *   2. the query       ?u=<id>   (also ?id= / ?user=)
+ *   3. the hash        #<id>
+ *   4. <script data-user="<id>">  or  <div id="now-playing" data-user="...">
+ *   5. window.NOW_PLAYING_USER_ID
+ * If none resolve, the script does nothing (lets a docs page show through).
+ *
+ * REQUIREMENT: the user must be in the Lanyard Discord (discord.gg/lanyard)
+ * so their presence is tracked. See /api for the full how-to.
+ *
+ * The mount keeps id="now-playing" so other scripts can anchor to it.
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
  * ===================================================================== */
 (function presence() {
   "use strict";
 
+<<<<<<< HEAD
   const API_BASE = (typeof window.NOW_PLAYING_API === "string" && window.NOW_PLAYING_API.trim())
     || "https://lanyard.cammy-the-cat.com";
   const POLL_INTERVAL = 30_000;
 
+=======
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   // ---- who are we showing? ------------------------------------------------
   function valid(id) { return typeof id === "string" && /^\d{5,25}$/.test(id); }
   function resolveUserId() {
@@ -46,7 +72,11 @@
   const mount = document.getElementById("now-playing");
   if (!mount || !DISCORD_USER_ID) return;
 
+<<<<<<< HEAD
   // ---- theme ---------------------------------------------------------------
+=======
+  // ---- theme: only on standalone api pages (homepage uses data-flavor) ----
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   if (!document.documentElement.getAttribute("data-flavor")) {
     const t = new URLSearchParams(location.search).get("theme");
     const themes = ["mocha", "macchiato", "frappe", "latte"];
@@ -55,7 +85,11 @@
     }
   }
 
+<<<<<<< HEAD
   // ---- build the card ------------------------------------------------------
+=======
+  // ---- build the card -----------------------------------------------------
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   const card = document.createElement("div");
   card.id = "now-playing";
   card.className = "presence-card";
@@ -64,8 +98,13 @@
     '<div class="pc-head">' +
       '<span class="pc-avatar">' +
         '<img class="pc-av-img" alt="" referrerpolicy="no-referrer" crossorigin="anonymous">' +
+<<<<<<< HEAD
         '<img class="pc-av-deco" alt="" hidden>' +
         '<span class="pc-status"></span>' +
+=======
+        '<img class="pc-av-deco" alt="" aria-hidden="true" hidden>' +
+        '<span class="pc-status" aria-hidden="true"></span>' +
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
       '</span>' +
       '<span class="pc-id">' +
         '<span class="pc-name-row">' +
@@ -74,17 +113,27 @@
         '</span>' +
         '<span class="pc-sub-row">' +
           '<span class="pc-user"></span>' +
+<<<<<<< HEAD
           '<span class="pc-platforms"></span>' +
         '</span>' +
         '<span class="pc-meta" hidden></span>' +
         '<span class="pc-badges"></span>' +
       '</span>' +
       '<button class="pc-star" type="button" title="wishlist">★</button>' +
+=======
+          '<span class="pc-platforms" aria-hidden="true"></span>' +
+        '</span>' +
+        '<span class="pc-meta" hidden></span>' +
+        '<span class="pc-badges" aria-hidden="true"></span>' +
+      '</span>' +
+      '<button class="pc-star" type="button" aria-label="show wishlist" title="wishlist">★</button>' +
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     '</div>' +
     '<div class="pc-sections"></div>' +
     '<div class="pc-wishlist" id="pc-wishlist"></div>';
   mount.replaceWith(card);
 
+<<<<<<< HEAD
   const avImg      = card.querySelector(".pc-av-img");
   const avDeco     = card.querySelector(".pc-av-deco");
   const nameEl     = card.querySelector(".pc-name");
@@ -98,6 +147,21 @@
   const wishlistEl = card.querySelector(".pc-wishlist");
 
   // ---- wishlist ------------------------------------------------------------
+=======
+  const avImg = card.querySelector(".pc-av-img");
+  const avDeco = card.querySelector(".pc-av-deco");
+  const nameEl = card.querySelector(".pc-name");
+  const tagEl = card.querySelector(".pc-tag");
+  const userEl = card.querySelector(".pc-user");
+  const platformsEl = card.querySelector(".pc-platforms");
+  const metaEl = card.querySelector(".pc-meta");
+  const badgesEl = card.querySelector(".pc-badges");
+  const sections = card.querySelector(".pc-sections");
+  const starBtn = card.querySelector(".pc-star");
+  const wishlistEl = card.querySelector(".pc-wishlist");
+
+  // ---- wishlist (revealed by the star) ------------------------------------
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   let wishlistItems = null;
   function renderWishlist() {
     if (!wishlistEl) return;
@@ -121,16 +185,30 @@
       e.stopPropagation();
       const open = card.classList.toggle("show-wishlist");
       starBtn.classList.toggle("on", open);
+<<<<<<< HEAD
 
+=======
+      starBtn.setAttribute("aria-expanded", open ? "true" : "false");
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
       if (open) renderWishlist();
     });
   }
 
+<<<<<<< HEAD
   let latest   = null;
   let ticker   = null;
   let pollTimer = null;
 
   // ---- helpers -------------------------------------------------------------
+=======
+  let latest = null;
+  let ticker = null;
+  let ws = null;
+  let heartbeat = null;
+  let reconnectDelay = 1000;
+
+  // ---- small helpers ------------------------------------------------------
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   function fmt(ms) {
     const total = Math.max(0, Math.floor(ms / 1000));
     const m = Math.floor(total / 60);
@@ -144,6 +222,7 @@
     return h ? `${h}h ${m}m` : `${m}m`;
   }
   function clamp(n, lo, hi) { return Math.min(Math.max(n, lo), hi); }
+<<<<<<< HEAD
   function esc(str) {
     return String(str == null ? "" : str)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -156,6 +235,10 @@
   function avatarUrl(u) {
     // Your API returns avatar_url already built — use it if present.
     if (u && u.avatar_url) return u.avatar_url;
+=======
+
+  function avatarUrl(u) {
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     if (!u || !u.avatar) return "https://cdn.discordapp.com/embed/avatars/0.png";
     const ext = String(u.avatar).startsWith("a_") ? "gif" : "png";
     return `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${ext}?size=128`;
@@ -169,6 +252,7 @@
     if (String(asset).startsWith("mp:")) return "https://media.discordapp.net/" + asset.slice(3);
     return `https://cdn.discordapp.com/app-assets/${appId}/${asset}.png`;
   }
+<<<<<<< HEAD
   function guildBadgeUrl(clan) {
     if (!clan || !clan.badge || !clan.guild_id) return null;
     return `https://cdn.discordapp.com/guild-tag-badges/${clan.guild_id}/${clan.badge}.png?size=24`;
@@ -204,6 +288,44 @@
     [1 << 17, "Early Verified Bot Developer", "6df5892e0f35b051f8b61eace34f4967"],
     [1 << 18, "Moderator Programs Alumni",    "fee1624003e2fee35cb398e125dc479b"],
     [1 << 22, "Active Developer",             "6bdc42827a38498929a4920da12695d9"],
+=======
+  function esc(str) {
+    return String(str == null ? "" : str)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function intToHex(n) {
+    return "#" + (Number(n) >>> 0).toString(16).padStart(6, "0").slice(-6);
+  }
+  function guildBadgeUrl(pg) {
+    if (!pg || !pg.badge || !pg.identity_guild_id) return null;
+    return `https://cdn.discordapp.com/guild-tag-badges/${pg.identity_guild_id}/${pg.badge}.png?size=24`;
+  }
+  const PLATFORM_ICONS = {
+    desktop: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>',
+    mobile: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg>',
+    web: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>'
+  };
+  function platformIcons(d) {
+    let html = "";
+    if (d.active_on_discord_desktop) html += '<span class="pc-plat" title="Desktop">' + PLATFORM_ICONS.desktop + "</span>";
+    if (d.active_on_discord_mobile) html += '<span class="pc-plat" title="Mobile">' + PLATFORM_ICONS.mobile + "</span>";
+    if (d.active_on_discord_web || d.active_on_discord_embedded) html += '<span class="pc-plat" title="Web">' + PLATFORM_ICONS.web + "</span>";
+    return html;
+  }
+  const BADGE_FLAGS = [
+    [1 << 0, "Discord Staff", "5e74e9b61934fc1f67c65515d1f7e60d"],
+    [1 << 1, "Partnered Server Owner", "3f9748e53446a137a052f3454e2de41e"],
+    [1 << 2, "HypeSquad Events", "bf01d1073931f921909045f3a39fd264"],
+    [1 << 3, "Bug Hunter", "2717692c7dca7289b35297368a940dd0"],
+    [1 << 6, "HypeSquad Bravery", "8a88d63823d8a71cd5e390baa45efa02"],
+    [1 << 7, "HypeSquad Brilliance", "011940fd013da3f7fb926e4a1cd2e618"],
+    [1 << 8, "HypeSquad Balance", "3aa41de486fa12454c3761e8e223442e"],
+    [1 << 9, "Early Supporter", "7060786766c9c840eb3019e725d2b358"],
+    [1 << 14, "Bug Hunter Gold", "848f79194d4be5ff5f81505cbd0ce1e6"],
+    [1 << 17, "Early Verified Bot Developer", "6df5892e0f35b051f8b61eace34f4967"],
+    [1 << 18, "Moderator Programs Alumni", "fee1624003e2fee35cb398e125dc479b"],
+    [1 << 22, "Active Developer", "6bdc42827a38498929a4920da12695d9"]
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   ];
   function renderBadges(flags) {
     flags = Number(flags) || 0;
@@ -211,20 +333,71 @@
     for (const [bit, name, hash] of BADGE_FLAGS) {
       if (flags & bit) {
         html += '<img class="pc-badge" src="https://cdn.discordapp.com/badge-icons/' + hash +
+<<<<<<< HEAD
           '.png" alt="" title="' + esc(name) + '" onerror="this.remove()">';
+=======
+          '.png" alt="' + esc(name) + '" title="' + esc(name) + '" onerror="this.remove()">';
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
       }
     }
     return html;
   }
+<<<<<<< HEAD
+=======
+
+  // Richer badges via dstn.to — Nitro, boosts, quests, orbs… everything
+  // Discord actually shows, which public_flags (0 for most) can't give.
+  let dstnBadges = null;
+  let lastFlags = 0;
+  function renderDstnBadges() {
+    return dstnBadges.map(function (b) {
+      const img = '<img class="pc-badge" src="https://cdn.discordapp.com/badge-icons/' + esc(b.icon) +
+        '.png" alt="' + esc(b.description || b.id) + '" title="' + esc(b.description || b.id) + '" onerror="this.remove()">';
+      return b.link
+        ? '<a class="pc-badge-link" href="' + esc(b.link) + '" target="_blank" rel="noopener">' + img + "</a>"
+        : img;
+    }).join("");
+  }
+  function paintBadges() {
+    if (!badgesEl) return;
+    badgesEl.innerHTML = (dstnBadges && dstnBadges.length) ? renderDstnBadges() : renderBadges(lastFlags);
+  }
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   function rgbTriplet(n) {
     n = Number(n) >>> 0;
     return ((n >> 16) & 255) + ", " + ((n >> 8) & 255) + ", " + (n & 255);
   }
+<<<<<<< HEAD
 
   // ---- album art → Catppuccin accent ---------------------------------------
   const ACCENT_VARS = [
     "rosewater","flamingo","pink","mauve","red","maroon","peach",
     "yellow","green","teal","sky","sapphire","blue","lavender",
+=======
+  function applyProfileGradient(colors) {
+    if (!colors || colors.length < 2) return;
+    card.style.setProperty("--pc-grad-1-rgb", rgbTriplet(colors[0]));
+    card.style.setProperty("--pc-grad-2-rgb", rgbTriplet(colors[1]));
+    card.classList.add("has-profile-grad");
+  }
+  function loadDstn() {
+    fetch("https://dcdn.dstn.to/profile/" + DISCORD_USER_ID)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (!j) return;
+        if (Array.isArray(j.badges)) { dstnBadges = j.badges; paintBadges(); }
+        if (j.user_profile && Array.isArray(j.user_profile.theme_colors)) {
+          applyProfileGradient(j.user_profile.theme_colors);
+        }
+      })
+      .catch(function () {});
+  }
+
+  // ---- album-art → Catppuccin accent --------------------------------------
+  const ACCENT_VARS = [
+    "rosewater", "flamingo", "pink", "mauve", "red", "maroon", "peach",
+    "yellow", "green", "teal", "sky", "saphire", "blue", "lavender",
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   ];
   function hexToRgb(hex) {
     hex = hex.trim().replace("#", "");
@@ -234,12 +407,21 @@
   }
   function getThemePalette() {
     const cs = getComputedStyle(document.documentElement);
+<<<<<<< HEAD
     return ACCENT_VARS.map((name) => {
       const v = cs.getPropertyValue("--" + name).trim();
       if (!v.startsWith("#")) return null;
       const [r, g, b] = hexToRgb(v);
       return { r, g, b };
     }).filter(Boolean);
+=======
+    const pal = [];
+    for (const name of ACCENT_VARS) {
+      const v = cs.getPropertyValue("--" + name).trim();
+      if (v.startsWith("#")) { const [r, g, b] = hexToRgb(v); pal.push({ r, g, b }); }
+    }
+    return pal;
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   }
   function nearestAccent(r, g, b) {
     const pal = getThemePalette();
@@ -291,6 +473,7 @@
     document.documentElement.style.removeProperty("--accent-rgb");
   }
 
+<<<<<<< HEAD
   // ---- section row builders ------------------------------------------------
   function rowText(kind, title, sub, extra) {
     return (
@@ -298,11 +481,21 @@
         '<span class="pc-row-kind">'  + esc(kind)  + "</span>" +
         '<span class="pc-row-title">' + esc(title) + "</span>" +
         '<span class="pc-row-sub">'   + esc(sub)   + "</span>" +
+=======
+  // ---- section (row) builders --------------------------------------------
+  function rowText(kind, title, sub, extra) {
+    return (
+      '<span class="pc-row-text">' +
+        '<span class="pc-row-kind">' + esc(kind) + "</span>" +
+        '<span class="pc-row-title">' + esc(title) + "</span>" +
+        '<span class="pc-row-sub">' + esc(sub) + "</span>" +
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
         (extra || "") +
       "</span>"
     );
   }
 
+<<<<<<< HEAD
   function customRow(cs) {
     // cs = presence.custom_status = { text, emoji: { id, name, animated, url } }
     const row = document.createElement("div");
@@ -312,11 +505,24 @@
       (eu ? '<img class="pc-emoji" src="' + esc(eu) + '" alt="">'
           : '<span class="pc-row-ic pc-dot"></span>') +
       '<span class="pc-custom-text">' + esc(cs.text || "") + "</span>";
+=======
+  function customRow(a) {
+    const row = document.createElement("div");
+    row.className = "pc-row pc-custom";
+    const eu = emojiUrl(a.emoji);
+    row.innerHTML =
+      (eu ? '<img class="pc-emoji" src="' + eu + '" alt="">'
+          : '<span class="pc-row-ic pc-dot" aria-hidden="true"></span>') +
+      '<span class="pc-custom-text">' + esc(a.state || "") + "</span>";
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     return row;
   }
 
   function spotifyRow(s) {
+<<<<<<< HEAD
     // s = presence.spotify
+=======
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     const row = document.createElement("a");
     row.className = "pc-row pc-spotify";
     row.target = "_blank";
@@ -324,19 +530,33 @@
     row.href = s.track_id ? "https://open.spotify.com/track/" + s.track_id : "https://open.spotify.com/";
     if (s.album) row.title = (s.song || "") + " — " + s.album;
     if (s.timestamps && s.timestamps.start) row.dataset.start = s.timestamps.start;
+<<<<<<< HEAD
     if (s.timestamps && s.timestamps.end)   row.dataset.end   = s.timestamps.end;
     row.innerHTML =
       (s.album_art_url ? '<img class="pc-art" src="' + esc(s.album_art_url) + '" alt="">' : "") +
       rowText("Listening to Spotify", s.song || "", s.artist || "",
         '<span class="pc-progress">' +
+=======
+    if (s.timestamps && s.timestamps.end) row.dataset.end = s.timestamps.end;
+    row.innerHTML =
+      (s.album_art_url ? '<img class="pc-art" src="' + esc(s.album_art_url) + '" alt="">' : "") +
+      rowText("Listening to Spotify", s.song || "", s.artist || "",
+        '<span class="pc-progress" aria-hidden="true">' +
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
           '<span class="pc-bar"><span class="pc-fill"></span></span>' +
           '<span class="pc-times"><span class="pc-cur">0:00</span><span class="pc-dur">0:00</span></span>' +
         "</span>");
     return row;
   }
 
+<<<<<<< HEAD
   function activityRow(a) {
     // a = one entry from presence.activities (type 0)
+=======
+  // Generic activity row (type 0). Discord presence exposes no link for
+  // games or apps, so this renders as a non-clickable card.
+  function activityRow(a) {
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     const isCode = /visual studio code|vscode/i.test(a.name || "");
     const row = document.createElement("div");
     row.className = "pc-row pc-row--stack " + (isCode ? "pc-dev" : "pc-game");
@@ -347,9 +567,15 @@
     const iconHtml = large
       ? '<span class="pc-ic-wrap">' +
           '<img class="pc-row-ic-img" src="' + esc(large) + '" alt="">' +
+<<<<<<< HEAD
           (small ? '<img class="pc-ic-badge" src="' + esc(small) + '" alt="" title="' + esc((a.assets && a.assets.small_text) || "") + '" onerror="this.remove()">' : "") +
         "</span>"
       : '<span class="pc-row-ic pc-dot"></span>';
+=======
+          (small ? '<img class="pc-ic-badge" src="' + esc(small) + '" alt="" title="' + esc(a.assets.small_text || "") + '" onerror="this.remove()">' : "") +
+        "</span>"
+      : '<span class="pc-row-ic pc-dot" aria-hidden="true"></span>';
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
 
     let kind = isCode ? "Coding" : "Playing " + (a.name || "");
     if (a.party && a.party.size && a.party.size.length === 2 && a.party.size[1]) {
@@ -364,6 +590,11 @@
               '<span class="pc-row-elapsed"></span>');
     row.appendChild(main);
 
+<<<<<<< HEAD
+=======
+    // Discord only exposes button *labels* (not URLs) via presence, so these
+    // are shown as plain (non-clickable) chips.
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     if (a.buttons && a.buttons.length) {
       const bwrap = document.createElement("div");
       bwrap.className = "pc-buttons";
@@ -382,15 +613,28 @@
     const hasUrl = !!a.url;
     const row = document.createElement(hasUrl ? "a" : "div");
     row.className = "pc-row pc-stream";
+<<<<<<< HEAD
     if (hasUrl) { row.target = "_blank"; row.rel = "noopener"; row.href = a.url; }
     const platform = (a.url && /twitch/i.test(a.url)) ? "Twitch"
                    : (a.url && /youtube/i.test(a.url)) ? "YouTube" : "Live";
     row.innerHTML =
       '<span class="pc-row-ic pc-dot"></span>' +
+=======
+    if (hasUrl) {
+      row.target = "_blank";
+      row.rel = "noopener";
+      row.href = a.url;
+    }
+    const platform = (a.url && /twitch/i.test(a.url)) ? "Twitch"
+                   : (a.url && /youtube/i.test(a.url)) ? "YouTube" : "Live";
+    row.innerHTML =
+      '<span class="pc-row-ic pc-dot" aria-hidden="true"></span>' +
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
       rowText("Streaming on " + platform, a.details || a.name || "", a.state || "");
     return row;
   }
 
+<<<<<<< HEAD
   // ---- render --------------------------------------------------------------
   function render(data) {
     if (!data) return;
@@ -407,12 +651,26 @@
 
     // avatar decoration — not in your current API but handle if added later
     const deco = u.avatar_decoration;
+=======
+  // ---- render -------------------------------------------------------------
+  function render(d) {
+    if (!d) return;
+    latest = d;
+
+    const u = d.discord_user || {};
+    const status = d.discord_status || "offline";
+    card.dataset.status = status;
+
+    avImg.src = avatarUrl(u);
+    const deco = u.avatar_decoration_data;
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     if (deco && deco.asset) {
       avDeco.src = `https://cdn.discordapp.com/avatar-decoration-presets/${deco.asset}.png?size=160`;
       avDeco.hidden = false;
     } else {
       avDeco.hidden = true;
     }
+<<<<<<< HEAD
 
     nameEl.textContent = u.display_name || u.global_name || u.username || "Discord User";
     userEl.textContent = u.username ? "@" + u.username : "";
@@ -423,11 +681,32 @@
       const badge = guildBadgeUrl(clan);
       tagEl.innerHTML = (badge ? '<img class="pc-tag-badge" src="' + badge + '" alt="" onerror="this.remove()">' : "") +
         '<span class="pc-tag-text">' + esc(clan.tag) + "</span>";
+=======
+    nameEl.textContent = u.display_name || u.global_name || u.username || "Discord User";
+    userEl.textContent = u.username ? "@" + u.username : "";
+
+    const styles = u.display_name_styles;
+    if (styles && styles.colors && styles.colors.length) {
+      const cols = styles.colors.map(intToHex);
+      nameEl.style.backgroundImage = "linear-gradient(90deg, " + (cols.length === 1 ? cols[0] + "," + cols[0] : cols.join(", ")) + ")";
+      nameEl.classList.add("is-gradient");
+    } else {
+      nameEl.style.backgroundImage = "";
+      nameEl.classList.remove("is-gradient");
+    }
+
+    const pg = u.primary_guild;
+    if (pg && pg.tag && pg.identity_enabled) {
+      const badge = guildBadgeUrl(pg);
+      tagEl.innerHTML = (badge ? '<img class="pc-tag-badge" src="' + badge + '" alt="" onerror="this.remove()">' : "") +
+        '<span class="pc-tag-text">' + esc(pg.tag) + "</span>";
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
       tagEl.hidden = false;
     } else {
       tagEl.hidden = true;
     }
 
+<<<<<<< HEAD
     platformsEl.innerHTML = platformIcons(p.platform);
 
     // badges from public_flags if available, else leave empty
@@ -446,11 +725,39 @@
     if (p.listening_to_spotify && p.spotify) {
       sections.appendChild(spotifyRow(p.spotify));
       applyAccent(p.spotify.album_art_url);
+=======
+    platformsEl.innerHTML = platformIcons(d);
+
+    lastFlags = u.public_flags || 0;
+    paintBadges();
+
+    const loc = d.kv && d.kv.location;
+    if (loc) {
+      metaEl.innerHTML = '<span class="pc-pin" aria-hidden="true">📍</span>' + esc(loc);
+      metaEl.hidden = false;
+    } else {
+      metaEl.hidden = true;
+    }
+
+    const acts = d.activities || [];
+
+    sections.innerHTML = "";
+
+    const custom = acts.find((a) => a.type === 4);
+    if (custom && (custom.state || (custom.emoji && custom.emoji.id))) sections.appendChild(customRow(custom));
+
+    if (d.listening_to_spotify && d.spotify) {
+      sections.appendChild(spotifyRow(d.spotify));
+      applyAccent(d.spotify.album_art_url);
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     } else {
       resetAccent();
     }
 
+<<<<<<< HEAD
     const acts = p.activities || [];
+=======
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
     acts.filter((a) => a.type === 0).forEach((a) => sections.appendChild(activityRow(a)));
     acts.filter((a) => a.type === 1).forEach((a) => sections.appendChild(streamRow(a)));
 
@@ -462,7 +769,11 @@
     card.hidden = false;
   }
 
+<<<<<<< HEAD
   // ---- time tickers --------------------------------------------------------
+=======
+  // ---- time tickers (progress bar + elapsed labels) -----------------------
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
   function updateTimes() {
     const sp = sections.querySelector(".pc-spotify[data-start][data-end]");
     if (sp) {
@@ -470,11 +781,19 @@
       if (end > start) {
         const elapsed = clamp(Date.now() - start, 0, end - start);
         const fill = sp.querySelector(".pc-fill");
+<<<<<<< HEAD
         const cur  = sp.querySelector(".pc-cur");
         const dur  = sp.querySelector(".pc-dur");
         if (fill) fill.style.width = clamp((elapsed / (end - start)) * 100, 0, 100) + "%";
         if (cur)  cur.textContent  = fmt(elapsed);
         if (dur)  dur.textContent  = fmt(end - start);
+=======
+        const cur = sp.querySelector(".pc-cur");
+        const dur = sp.querySelector(".pc-dur");
+        if (fill) fill.style.width = clamp((elapsed / (end - start)) * 100, 0, 100) + "%";
+        if (cur) cur.textContent = fmt(elapsed);
+        if (dur) dur.textContent = fmt(end - start);
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
       }
     }
     sections.querySelectorAll("[data-elapsed-start]").forEach((row) => {
@@ -483,6 +802,7 @@
     });
   }
   function startTicker() { if (!ticker) ticker = setInterval(updateTimes, 1000); }
+<<<<<<< HEAD
   function stopTicker()  { if (ticker) { clearInterval(ticker); ticker = null; } }
 
   // ---- REST polling --------------------------------------------------------
@@ -508,4 +828,48 @@
   });
 
   startPolling();
+=======
+  function stopTicker() { if (ticker) { clearInterval(ticker); ticker = null; } }
+
+  // ---- Lanyard websocket --------------------------------------------------
+  function connect() {
+    ws = new WebSocket("wss://api.lanyard.rest/socket");
+
+    ws.addEventListener("message", (evt) => {
+      let msg;
+      try { msg = JSON.parse(evt.data); } catch (e) { return; }
+
+      if (msg.op === 1) {
+        const interval = (msg.d && msg.d.heartbeat_interval) || 30000;
+        if (heartbeat) clearInterval(heartbeat);
+        heartbeat = setInterval(() => {
+          if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 3 }));
+        }, interval);
+        ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_USER_ID } }));
+        return;
+      }
+
+      if (msg.op === 0) {
+        const d = msg.t === "INIT_STATE" ? (msg.d && msg.d[DISCORD_USER_ID]) || msg.d : msg.d;
+        render(d);
+      }
+    });
+
+    ws.addEventListener("open", () => { reconnectDelay = 1000; });
+    ws.addEventListener("close", () => {
+      if (heartbeat) { clearInterval(heartbeat); heartbeat = null; }
+      stopTicker();
+      setTimeout(connect, reconnectDelay);
+      reconnectDelay = Math.min(reconnectDelay * 2, 30000);
+    });
+    ws.addEventListener("error", () => { try { ws.close(); } catch (e) {} });
+  }
+
+  connect();
+  loadDstn();
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && latest) updateTimes();
+  });
+>>>>>>> 0520a35 (Implement Discord presence card with live updates and styling adjustments)
 })();
