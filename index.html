@@ -1,18 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>oh noes</title>
-<style>
-html { color-scheme: dark; }
-body { width: 35em; margin: 0 auto;
-font-family: Tahoma, Verdana, Arial, sans-serif; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cammy-the-cat</title>
+  <meta name="description" content="Cammy's personal site: local AI, Rust systems, graphics and homelab projects.">
+  <script>
+    // Apply saved theme before first paint to avoid a flash.
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<h2>A FUCKY WUCKY OH NOES HAPPENED</h1>
-<p>Please excuse Camilla she's kinda dumb and probably broke something check back in 20min-1h okie?</p>
-<p>If you are Camilla, dumbass. try fixing it idiot </p>
-<p><sub><em>have you tried fixing it</em></sub></p>
-<p><em>Faithfully yours the dumbass Camilla</em></p>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/">~/cammy</a>
+    <nav>
+      <a href="/projects/">projects</a>
+      <a href="/about/">about</a>
+      <a href="/external/">external</a>
+      <a href="/socials/">socials</a>
+      <button id="theme-toggle" type="button" aria-label="Toggle light/dark theme">
+        <span class="icon-dark">☾</span><span class="icon-light">☀</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="prompt">$ whoami</p>
+      <h1><span id="typed"></span><span class="caret" aria-hidden="true">▍</span></h1>
+      <p class="lead">I build local AI tools, Rust systems, GPU graphics and homelab software. Everything on this site is something I made.</p>
+      <div class="hero-links">
+        <a class="btn primary" href="/projects/">see projects</a>
+        <a class="btn" href="/about/">about me</a>
+        <a class="btn" href="/socials/">socials</a>
+      </div>
+    </section>
+
+    <section>
+      <div class="tiles">
+        <a class="card reveal" href="/projects/"><h3><span>projects</span><span class="arrow" aria-hidden="true">→</span></h3><p>AI tools, Rust systems, graphics and more.</p></a>
+        <a class="card reveal" href="/about/"><h3><span>about</span><span class="arrow" aria-hidden="true">→</span></h3><p>Who I am and what I like building.</p></a>
+        <a class="card reveal" href="/external/"><h3><span>external</span><span class="arrow" aria-hidden="true">→</span></h3><p>My other pages and profiles around the web.</p></a>
+        <a class="card reveal" href="/socials/"><h3><span>socials</span><span class="arrow" aria-hidden="true">→</span></h3><p>Where to find me online.</p></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year"></span> cammy-the-cat</span>
+    <span class="muted">built by hand, themed by you</span>
+  </footer>
+
+  <script src="/script.js"></script>
 </body>
 </html>

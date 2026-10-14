@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>socials · cammy-the-cat</title>
+  <meta name="description" content="Where to find Cammy online.">
+  <script>
+    // Apply saved theme before first paint to avoid a flash.
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/">~/cammy</a>
+    <nav>
+      <a href="/projects/">projects</a>
+      <a href="/about/">about</a>
+      <a href="/external/">external</a>
+      <a href="/socials/">socials</a>
+      <button id="theme-toggle" type="button" aria-label="Toggle light/dark theme">
+        <span class="icon-dark">☾</span><span class="icon-light">☀</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <p class="prompt">$ ls socials/</p>
+      <h1>socials</h1>
+      <p class="lead">Find me around the web.</p>
+    </section>
+    <section>
+      <div class="tiles">
+        <a class="card reveal" href="https://github.com/cammythekitty" rel="noopener"><h3><span>GitHub</span><span class="arrow" aria-hidden="true">↗</span></h3><p>Open an issue or a discussion on any of my repos.</p></a>
+        <a class="card reveal" href="https://www.twitch.tv/cammy_the_kitty" rel="noopener"><h3><span>Twitch</span><span class="arrow" aria-hidden="true">↗</span></h3><p>Streams.</p><div class="tags"><span class="tag">cammy_the_kitty</span></div></a>
+        <a class="card reveal" href="https://www.youtube.com/@Cammythekitty" rel="noopener"><h3><span>YouTube</span><span class="arrow" aria-hidden="true">↗</span></h3><p>Videos.</p><div class="tags"><span class="tag">@Cammythekitty</span></div></a>
+        <button class="card reveal copy" type="button" data-copy="cammythecat"><h3><span>Discord</span><span class="arrow" aria-hidden="true">⧉</span></h3><p>Add me by username. Click to copy.</p><div class="tags"><span class="tag">cammythecat</span></div></button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year"></span> cammy-the-cat</span>
+    <span class="muted">built by hand, themed by you</span>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>

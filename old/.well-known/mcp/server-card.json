@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0",
+  "serverInfo": {
+    "name": "cammy-the-cat",
+    "version": "1.0.0",
+    "description": "Personal site of Camilla — developer, streamer, cat. Projects include SeraphByte (local LLM runner, Rust/WebSocket) and AtlasAI (Python LLM GUI).",
+    "contact": "https://cammy-the-cat.com/socials"
+  },
+  "capabilities": {
+    "resources": true,
+    "tools": false,
+    "prompts": false
+  },
+  "links": {
+    "homepage": "https://cammy-the-cat.com/",
+    "projects": "https://cammy-the-cat.com/projects",
+    "socials": "https://cammy-the-cat.com/socials",
+    "github": "https://github.com/cammythekitty"
+  }
+}

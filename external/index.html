@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>external · cammy-the-cat</title>
+  <meta name="description" content="Other pages and profiles by Cammy around the web.">
+  <script>
+    // Apply saved theme before first paint to avoid a flash.
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/">~/cammy</a>
+    <nav>
+      <a href="/projects/">projects</a>
+      <a href="/about/">about</a>
+      <a href="/external/">external</a>
+      <a href="/socials/">socials</a>
+      <button id="theme-toggle" type="button" aria-label="Toggle light/dark theme">
+        <span class="icon-dark">☾</span><span class="icon-light">☀</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <p class="prompt">$ ls external/</p>
+      <h1>external</h1>
+      <p class="lead">My other corners of the internet.</p>
+    </section>
+    <section>
+      <div class="tiles">
+        <a class="card reveal" href="https://github.com/cammythekitty" rel="noopener"><h3><span>GitHub</span><span class="arrow" aria-hidden="true">↗</span></h3><p>Source for most of the projects here.</p><div class="tags"><span class="tag">cammythekitty</span></div></a>
+        <a class="card reveal" href="https://vaelora.dev" rel="noopener"><h3><span>vaelora.dev</span><span class="arrow" aria-hidden="true">↗</span></h3><p>My professional page.</p><div class="tags"><span class="tag">professional</span></div></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year"></span> cammy-the-cat</span>
+    <span class="muted">built by hand, themed by you</span>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>

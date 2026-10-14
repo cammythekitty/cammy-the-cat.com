@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>about · cammy-the-cat</title>
+  <meta name="description" content="About Cammy: Linux-first tinkerer building local AI, Rust systems and homelab tools.">
+  <script>
+    // Apply saved theme before first paint to avoid a flash.
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/">~/cammy</a>
+    <nav>
+      <a href="/projects/">projects</a>
+      <a href="/about/">about</a>
+      <a href="/external/">external</a>
+      <a href="/socials/">socials</a>
+      <button id="theme-toggle" type="button" aria-label="Toggle light/dark theme">
+        <span class="icon-dark">☾</span><span class="icon-light">☀</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <p class="prompt">$ cat about.md</p>
+      <h1>about</h1>
+    </section>
+    <section class="prose reveal">
+      <p>Hi, I'm Cammy. I'm a Linux-first tinkerer who likes things that run on my own hardware: local language models, my own build systems and dashboards for my own servers.</p>
+      <p>Most of what I make sits somewhere between systems programming and AI. I write Rust when I want speed and control, Python when I want to move quickly, and the occasional GPU shader when I want to see something beautiful on screen.</p>
+    </section>
+    <section class="reveal">
+      <h2>what I work with</h2>
+      <div class="tags big">
+        <span class="tag">Rust</span><span class="tag">Python</span><span class="tag">Kotlin</span>
+        <span class="tag">WebGPU</span><span class="tag">Linux</span><span class="tag">systemd</span>
+        <span class="tag">local LLMs</span><span class="tag">YOLOv8</span><span class="tag">homelab</span>
+      </div>
+    </section>
+    <section class="reveal">
+      <h2>currently</h2>
+      <ul class="list">
+        <li>Building local AI assistants that run fully offline.</li>
+        <li>Working on my own Linux build system, aetherOS.</li>
+        <li>Reworking my professional page at <a class="inline" href="https://vaelora.dev" rel="noopener">vaelora.dev</a>.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year"></span> cammy-the-cat</span>
+    <span class="muted">built by hand, themed by you</span>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
